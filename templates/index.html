@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Stock News</title>
+    <style>
+      body {
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+          'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+        font-size: small;
+      }
+      .box {
+        width: 400px;
+        min-height: 270px;
+        margin: 20px 20px 20px 0;
+        font-weight: bold;
+        padding: 20px;
+        border-style: dotted;
+        border-color: gray;
+        border-radius: 10px;
+        border-width: 2px;
+      }
+
+      p {
+        margin: 20px 0;
+        padding: 10px;
+        border-radius: 5px;
+      }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+      const socket = io()
+      socket.on('message', function (data) {
+        console.log(data)
+        // Filter out messages less than 10 characters or starting with '('
+        if (data.content.length >= 10 && !data.content.startsWith('(')) {
+          const container = document.getElementById(data.sender)
+          const messageElement = document.createElement('p')
+          messageElement.innerText = data.content
+          container.appendChild(messageElement)
+          setTimeout(() => {
+            container.removeChild(messageElement);
+        }, 5000); // 10000 milliseconds = 10 seconds
+        }
+      })
+
+      async function start() {
+        await fetch(`/run`)
+      }
+    </script>
+  </head>
+  <body>
+    <button onclick="start()">Run</button>
+    <div id="results" style="">
+      <div id="moderator" class="box">
+        <div style="margin-bottom: 10px">
+          Moderator
+        </div>
+        <img src="static/images/moderator.png" width="100" />
+      </div>
+      <div id="peter" class="box">
+        <div style="margin-bottom: 10px">
+          Peter
+        </div>
+        <img src="static/images/peter.png" width="100" />
+      </div>
+      <div id="bob" class="box">
+        <div style="margin-bottom: 10px">
+          Bob
+        </div>
+        <img src="static/images/bob.png" height="92" />
+      </div>
+    </div>
+  </body>
+</html>
